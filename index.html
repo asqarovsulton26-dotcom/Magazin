@@ -335,26 +335,55 @@
   .product-badge.new { background: var(--dark); }
 
   .product-actions {
-    position: absolute; bottom: -48px; left: 0; right: 0;
+    position: absolute; bottom: 0; left: 0; right: 0;
     display: flex; gap: 0;
-    transition: bottom .25s;
   }
-
-  .product-card:hover .product-actions { bottom: 0; }
 
   .prod-action-btn {
     flex: 1;
-    background: var(--dark); color: white;
+    background: rgba(26,26,24,0.85); color: white;
     border: none; cursor: pointer;
-    padding: 14px 0;
+    padding: 12px 0;
     font-size: 11px; font-weight: 500;
     letter-spacing: 1px;
     text-transform: uppercase;
     transition: background .2s;
   }
 
-  .prod-action-btn:hover { background: var(--accent); }
-  .prod-action-btn + .prod-action-btn { border-left: 1px solid #333; }
+  .prod-action-btn:hover, .prod-action-btn:active { background: var(--accent); }
+  .prod-action-btn + .prod-action-btn { border-left: 1px solid #444; }
+
+  /* PRODUCT DETAIL MODAL */
+  .prod-modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 400;
+    display: flex; align-items: flex-end;
+    opacity: 0; pointer-events: none;
+    transition: opacity .3s;
+  }
+  .prod-modal-overlay.open { opacity: 1; pointer-events: all; }
+  .prod-modal {
+    background: white;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 32px 24px;
+    transform: translateY(100%);
+    transition: transform .35s cubic-bezier(.25,.46,.45,.94);
+    border-radius: 16px 16px 0 0;
+  }
+  .prod-modal-overlay.open .prod-modal { transform: translateY(0); }
+  .prod-modal-emoji { font-size: 80px; text-align: center; margin-bottom: 16px; }
+  .prod-modal-name { font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 8px; }
+  .prod-modal-cat { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+  .prod-modal-price { font-size: 28px; font-weight: 700; color: var(--accent); margin-bottom: 8px; }
+  .prod-modal-old { font-size: 16px; color: var(--muted); text-decoration: line-through; margin-bottom: 24px; }
+  .prod-modal-rating { font-size: 20px; color: var(--accent); margin-bottom: 24px; }
+  .prod-modal-close {
+    position: absolute; top: 16px; right: 20px;
+    background: none; border: none; font-size: 24px; cursor: pointer;
+  }
 
   .product-info { padding: 20px; }
   .product-name { font-size: 15px; font-weight: 500; margin-bottom: 6px; }
@@ -1172,6 +1201,20 @@
   <span id="notifText">Savatga qo'shildi!</span>
 </div>
 
+<!-- PRODUCT DETAIL MODAL -->
+<div class="prod-modal-overlay" id="prodModal" onclick="closeProdModal(event)">
+  <div class="prod-modal" id="prodModalBox">
+    <button class="prod-modal-close" onclick="closeProdModalDirect()">✕</button>
+    <div class="prod-modal-emoji" id="pmEmoji"></div>
+    <div class="prod-modal-name" id="pmName"></div>
+    <div class="prod-modal-cat" id="pmCat"></div>
+    <div class="prod-modal-rating" id="pmRating"></div>
+    <div class="prod-modal-price" id="pmPrice"></div>
+    <div class="prod-modal-old" id="pmOld"></div>
+    <button class="btn-primary" style="width:100%;justify-content:center;" id="pmCartBtn">🛒 Savatga qo'shish</button>
+  </div>
+</div>
+
 <!-- AGE WARNING MODAL -->
 <div class="modal-overlay" id="ageModal">
   <div class="modal-box">
@@ -1342,15 +1385,15 @@ function renderProducts(list) {
   const grid = document.getElementById('productsGrid');
   grid.innerHTML = list.map(p => `
     <div class="product-card ${getCatClass(p.cat)}" data-id="${p.id}">
-      <div class="product-img">
+      <div class="product-img" onclick="openProdModal(${p.id})" style="cursor:pointer;">
         ${p.emoji}
         <span class="product-badge ${p.badge === 'Yangi' ? 'new' : ''}">${p.badge}</span>
         <div class="product-actions">
-          <button class="prod-action-btn" onclick="addToCart(${p.id})">Savatga</button>
-          <button class="prod-action-btn" onclick="showNotification('${p.name} sevimlilarga qo\'shildi ♥')">♥</button>
+          <button class="prod-action-btn" onclick="event.stopPropagation();addToCart(${p.id})">🛒 Savat</button>
+          <button class="prod-action-btn" onclick="event.stopPropagation();showNotification('${p.name} sevimlilarga qo\'shildi ♥')">♥</button>
         </div>
       </div>
-      <div class="product-info">
+      <div class="product-info" onclick="openProdModal(${p.id})" style="cursor:pointer;">
         <div class="product-name">${p.name}</div>
         <div class="product-sub">${p.cat}</div>
         <div class="product-footer">
@@ -1490,6 +1533,27 @@ function filterByViloyat(nom) {
   document.querySelectorAll('.vtag').forEach(t => t.classList.remove('active'));
   event.target.classList.add('active');
   showNotification('📍 ' + nom + ' tanlandi ✓');
+}
+
+function openProdModal(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('pmEmoji').textContent = p.emoji;
+  document.getElementById('pmName').textContent = p.name;
+  document.getElementById('pmCat').textContent = p.cat;
+  document.getElementById('pmRating').textContent = '★'.repeat(Math.floor(p.rating)) + ' ' + p.rating;
+  document.getElementById('pmPrice').textContent = formatPrice(p.price);
+  document.getElementById('pmOld').textContent = p.old ? formatPrice(p.old) : '';
+  document.getElementById('pmCartBtn').onclick = () => { addToCart(id); closeProdModalDirect(); };
+  document.getElementById('prodModal').classList.add('open');
+}
+
+function closeProdModal(e) {
+  if (e.target === document.getElementById('prodModal')) closeProdModalDirect();
+}
+
+function closeProdModalDirect() {
+  document.getElementById('prodModal').classList.remove('open');
 }
 
 // Viloyatlar
