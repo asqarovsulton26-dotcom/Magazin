@@ -544,8 +544,9 @@
   .cart-overlay.open { opacity: 1; pointer-events: all; }
 
   .cart-drawer {
-    position: fixed; top: 0; right: -420px;
-    width: 420px; height: 100vh;
+    position: fixed; top: 0; right: -110%;
+    width: min(420px, 100vw);
+    height: 100vh;
     background: var(--light);
     z-index: 201;
     transition: right .35s cubic-bezier(.25,.46,.45,.94);
@@ -1203,7 +1204,7 @@
 
 <!-- PRODUCT DETAIL MODAL -->
 <div class="prod-modal-overlay" id="prodModal" onclick="closeProdModal(event)">
-  <div class="prod-modal" id="prodModalBox">
+  <div class="prod-modal" id="prodModalBox" style="position:relative;">
     <button class="prod-modal-close" onclick="closeProdModalDirect()">✕</button>
     <div class="prod-modal-emoji" id="pmEmoji"></div>
     <div class="prod-modal-name" id="pmName"></div>
@@ -1211,7 +1212,13 @@
     <div class="prod-modal-rating" id="pmRating"></div>
     <div class="prod-modal-price" id="pmPrice"></div>
     <div class="prod-modal-old" id="pmOld"></div>
-    <button class="btn-primary" style="width:100%;justify-content:center;" id="pmCartBtn">🛒 Savatga qo'shish</button>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;background:#f5f3ef;padding:16px;border-radius:8px;">
+      <div><div style="font-size:11px;color:#888;letter-spacing:1px;margin-bottom:4px;">BREND</div><div style="font-weight:600;font-size:14px;" id="pmBrend"></div></div>
+      <div><div style="font-size:11px;color:#888;letter-spacing:1px;margin-bottom:4px;">RANG</div><div style="font-weight:600;font-size:14px;" id="pmRang"></div></div>
+      <div><div style="font-size:11px;color:#888;letter-spacing:1px;margin-bottom:4px;">RAZMER</div><div style="font-weight:600;font-size:14px;" id="pmRazmer"></div></div>
+      <div><div style="font-size:11px;color:#888;letter-spacing:1px;margin-bottom:4px;">ISHLAB CHIQARILGAN</div><div style="font-weight:600;font-size:14px;" id="pmIshlab"></div></div>
+    </div>
+    <button class="btn-primary" style="width:100%;justify-content:center;padding:16px;" id="pmCartBtn">🛒 Savatga qo'shish</button>
   </div>
 </div>
 
@@ -1363,6 +1370,132 @@ const products = [
   { id:115, name:"Atir Suv (Romantik)", cat:'Intim',         price:280000,  old:340000,   emoji:'🌹', badge:'Chegirma', rating:4.8 },
   { id:116, name:"Bolishcha Seti",       cat:'Intim',        price:165000,  old:null,      emoji:'🛏️', badge:'Yangi',   rating:4.6 },
 ];
+
+// Mahsulot qo'shimcha ma'lumotlari
+const productDetails = {
+  1:  { brend:'ZaraStyle',     rang:'Qizil, Moviy, Qora',         razmer:'XS S M L XL',          ishlab:"Turkiya" },
+  2:  { brend:'Apple',         rang:'Titanium, Qora, Oq',         razmer:'Standart',              ishlab:"AQSH" },
+  3:  { brend:'HomeWood',      rang:'Jigarrang, Ochiq',           razmer:'120x60 sm',             ishlab:"O'zbekiston" },
+  4:  { brend:'Adidas',        rang:'Oq-Qora',                    razmer:'5-razmer',              ishlab:"Xitoy" },
+  5:  { brend:'NorthFace',     rang:'Qora, Ko\'k, Yashil',        razmer:'S M L XL XXL',          ishlab:"Xitoy" },
+  6:  { brend:'SportPro',      rang:'Qora',                       razmer:'Standart',              ishlab:"Xitoy" },
+  7:  { brend:'Apple',         rang:'Oq',                         razmer:'Standart',              ishlab:"AQSH" },
+  8:  { brend:'AromHome',      rang:'Krem, Moviy',                razmer:'200g',                  ishlab:"Fransiya" },
+  9:  { brend:'Mahalliy',      rang:'Qizil',                      razmer:'1 kg',                  ishlab:"O'zbekiston" },
+  10: { brend:'Mahalliy',      rang:'Sariq',                      razmer:'1 kg',                  ishlab:"Ekvador" },
+  11: { brend:'Mahalliy',      rang:'Yashil',                     razmer:'1 kg',                  ishlab:"O'zbekiston" },
+  12: { brend:'Mahalliy',      rang:'Sariq',                      razmer:'1 kg',                  ishlab:"O'zbekiston" },
+  13: { brend:'Mahalliy',      rang:'Qora, Yashil',               razmer:'1 kg',                  ishlab:"O'zbekiston" },
+  14: { brend:'Mahalliy',      rang:"To'q sariq",                 razmer:'1 kg',                  ishlab:"Turkiya" },
+  15: { brend:'Mahalliy',      rang:'Qizil',                      razmer:'500 g',                 ishlab:"O'zbekiston" },
+  16: { brend:'Mahalliy',      rang:'Qizil',                      razmer:'1 kg',                  ishlab:"O'zbekiston" },
+  17: { brend:'Mahalliy',      rang:'Qizil',                      razmer:'1 kg',                  ishlab:"O'zbekiston" },
+  18: { brend:'Mahalliy',      rang:'Yashil',                     razmer:'1 kg',                  ishlab:"O'zbekiston" },
+  19: { brend:'Mahalliy',      rang:'Yashil',                     razmer:'1-2 kg',                ishlab:"O'zbekiston" },
+  20: { brend:'Mahalliy',      rang:"To'q sariq",                 razmer:'1 kg',                  ishlab:"O'zbekiston" },
+  21: { brend:'Mahalliy',      rang:'Sariq, Qizil',               razmer:'1 kg',                  ishlab:"O'zbekiston" },
+  22: { brend:'Mahalliy',      rang:'Oq',                         razmer:"1 to'p",                ishlab:"O'zbekiston" },
+  23: { brend:'Maybelline',    rang:'Qizil, Pushti, Jigarrang',   razmer:'Standart',              ishlab:"AQSH" },
+  24: { brend:'Nivea',         rang:'Oq',                         razmer:'50 ml',                 ishlab:"Germaniya" },
+  25: { brend:'Chanel',        rang:'Shaffof',                    razmer:'50 ml',                 ishlab:"Fransiya" },
+  26: { brend:'NYX',           rang:'Har xil ranglar',            razmer:'12 ta',                 ishlab:"AQSH" },
+  27: { brend:'Pantene',       rang:'Oq',                         razmer:'200 ml',                ishlab:"Polsha" },
+  28: { brend:"L'Oreal",       rang:"Ter, Ochiq, To'q",           razmer:'30 ml',                 ishlab:"Fransiya" },
+  29: { brend:'GoldCraft',     rang:'Oltin',                      razmer:'16 17 18 19',           ishlab:"O'zbekiston" },
+  30: { brend:'SilverArt',     rang:'Kumush',                     razmer:'45 sm',                 ishlab:"Turkiya" },
+  31: { brend:'DiamondLux',    rang:'Kumush, Oltin',              razmer:'Standart',              ishlab:"Italiya" },
+  32: { brend:'BraceletPro',   rang:'Oltin, Kumush, Rang-barang', razmer:'Standart',              ishlab:"Xitoy" },
+  33: { brend:'GoldChain',     rang:'Oltin',                      razmer:'50 sm, 60 sm',          ishlab:"O'zbekiston" },
+  34: { brend:'SweetBake',     rang:'Jigarrang',                  razmer:'1 kg',                  ishlab:"O'zbekiston" },
+  35: { brend:'FrenchSweet',   rang:'Har xil',                    razmer:'12 dona',               ishlab:"Fransiya" },
+  36: { brend:'Godiva',        rang:'Qora, Sut, Oq',              razmer:'100 g',                 ishlab:"Belgiya" },
+  37: { brend:'SoftCandy',     rang:'Pushti, Oq',                 razmer:'200 g',                 ishlab:"Rossiya" },
+  38: { brend:'SweetBake',     rang:'Sariq',                      razmer:'1 kg',                  ishlab:"O'zbekiston" },
+  39: { brend:'HoneyBite',     rang:'Oltin sariq',                razmer:'300 g',                 ishlab:"O'zbekiston" },
+  40: { brend:'CleanPro',      rang:"Yashil, Ko'k",               razmer:'Standart',              ishlab:"Xitoy" },
+  41: { brend:'Ariel',         rang:'Oq',                         razmer:'1 kg',                  ishlab:"Germaniya" },
+  42: { brend:'Fairy',         rang:'Yashil, Sariq',              razmer:'500 ml',                ishlab:"Germaniya" },
+  43: { brend:'CleanHome',     rang:"Sariq, Ko'k",                razmer:'Standart',              ishlab:"Xitoy" },
+  44: { brend:'Xiaomi',        rang:'Oq',                         razmer:'Standart',              ishlab:"Xitoy" },
+  45: { brend:'Raid',          rang:'Sariq',                      razmer:'300 ml',                ishlab:"Fransiya" },
+  46: { brend:'SilkWay',       rang:"Qizil, Ko'k, Yashil, Sariq", razmer:'90x90 sm',             ishlab:"Xitoy" },
+  47: { brend:'WoolSoft',      rang:'Jigarrang, Kulrang',         razmer:'180x30 sm',             ishlab:"Turkiya" },
+  48: { brend:'HijabStyle',    rang:'Oq, Qora, Pushti, Moviy',   razmer:'Standart',              ishlab:"Turkiya" },
+  49: { brend:'KidsWear',      rang:'Rang-barang',                razmer:'60x60 sm',              ishlab:"O'zbekiston" },
+  50: { brend:'CashmereArt',   rang:'Qora, Kulrang, Krem',        razmer:'200x70 sm',             ishlab:"Italiya" },
+  51: { brend:'Victoria',      rang:'Qora, Oq, Pushti',           razmer:'S M L XL',              ishlab:"Xitoy" },
+  52: { brend:'Calvin Klein',  rang:'Oq, Kulrang, Qora',          razmer:'S M L XL XXL',          ishlab:"Bangladesh" },
+  53: { brend:'ThermoWear',    rang:'Qora, Kulrang',              razmer:'S M L XL',              ishlab:"Turkiya" },
+  54: { brend:'KidsDream',     rang:"Ko'k, Pushti, Sariq",        razmer:'2-3 4-5 6-7 yosh',      ishlab:"Turkiya" },
+  55: { brend:'Nike',          rang:"Qora, Ko'k",                 razmer:'S M L XL',              ishlab:"Vyetnam" },
+  56: { brend:'NaturHoney',    rang:'Oltin sariq',                razmer:'500 g',                 ishlab:"O'zbekiston" },
+  57: { brend:'HerbalTea',     rang:'Jigarrang',                  razmer:'100 g',                 ishlab:"Hindiston" },
+  58: { brend:'NaturMed',      rang:"To'q jigarrang",             razmer:'30 ml',                 ishlab:"O'zbekiston" },
+  59: { brend:'AlpinaMed',     rang:'Qora',                       razmer:'60 tabletka',           ishlab:"O'zbekiston" },
+  60: { brend:'RosehipNatur',  rang:'Qizil',                      razmer:'250 ml',                ishlab:"O'zbekiston" },
+  61: { brend:'EssentialOil',  rang:'Binafsha',                   razmer:'10 ml',                 ishlab:"Fransiya" },
+  62: { brend:'BabyFirst',     rang:"Oq, Pushti, Ko'k",           razmer:'0-3 3-6 6-9 oy',        ishlab:"Turkiya" },
+  63: { brend:'GirlStyle',     rang:'Pushti, Gul naqshli',        razmer:'2-3 4-5 6-7 yosh',      ishlab:"Turkiya" },
+  64: { brend:'BoyZone',       rang:"Ko'k, Kulrang",              razmer:'2-3 4-5 6-7 yosh',      ishlab:"Xitoy" },
+  65: { brend:'KidsHat',       rang:'Rang-barang',                razmer:'48-50 52-54 sm',        ishlab:"Xitoy" },
+  66: { brend:'Adidas Kids',   rang:"Oq, Ko'k, Qizil",           razmer:'20-35',                 ishlab:"Xitoy" },
+  67: { brend:'SchoolWear',    rang:"Qora, Ko'k",                 razmer:'6-7 8-9 10-11 yosh',    ishlab:"O'zbekiston" },
+  68: { brend:'WinterKids',    rang:"Ko'k, Qizil, Yashil",        razmer:'2-3 4-5 6-7 8-9 yosh',  ishlab:"Xitoy" },
+  69: { brend:'SweetDream',    rang:'Pushti, Ko\'k, Sariq',       razmer:'2-3 4-5 6-7 yosh',      ishlab:"Turkiya" },
+  70: { brend:'KidsPants',     rang:"Ko'k, Qora, Kulrang",        razmer:'2-3 4-5 6-7 yosh',      ishlab:"Xitoy" },
+  71: { brend:'LeatherLux',    rang:'Qora, Jigarrang, Qizil',     razmer:'30x25 sm',              ishlab:"Italiya" },
+  72: { brend:'MiniStyle',     rang:'Qora, Pushti, Kulrang',      razmer:'20x15 sm',              ishlab:"Xitoy" },
+  73: { brend:'OfficePro',     rang:'Qora, Jigarrang',            razmer:'40x30 sm',              ishlab:"Turkiya" },
+  74: { brend:'ShoulderBag',   rang:'Kulrang, Yashil, Qora',      razmer:'35x28 sm',              ishlab:"Xitoy" },
+  75: { brend:'EveningStyle',  rang:'Oltin, Kumush, Qora',        razmer:'22x12 sm',              ishlab:"Turkiya" },
+  76: { brend:'Nike',          rang:"Qora, Ko'k, Yashil",         razmer:'30 litr',               ishlab:"Vyetnam" },
+  77: { brend:'SchoolPack',    rang:"Ko'k, Qizil, Pushti",        razmer:'20 litr',               ishlab:"Xitoy" },
+  78: { brend:'Osprey',        rang:"Yashil, Qora, To'q ko'k",    razmer:'50 litr',               ishlab:"AQSH" },
+  79: { brend:'Samsonite',     rang:'Qora, Kulrang',              razmer:'15.6 dyuymgacha',       ishlab:"Belgiya" },
+  80: { brend:'MiniPack',      rang:'Pushti, Lavanda, Qora',      razmer:'10 litr',               ishlab:"Xitoy" },
+  81: { brend:'Spigen',        rang:"Shaffof, Qora, Ko'k",        razmer:'iPhone 15/15 Pro',      ishlab:"Koreya" },
+  82: { brend:'Nillkin',       rang:"Qora, Ko'k, Yashil",         razmer:'S23/S24 seriya',        ishlab:"Xitoy" },
+  83: { brend:'Tomtoc',        rang:'Kulrang, Qora',              razmer:'13 14 15 dyuym',        ishlab:"Xitoy" },
+  84: { brend:'ESR',           rang:"Qora, Ko'k, Qizil",          razmer:'10 11 12 dyuym',        ishlab:"Xitoy" },
+  85: { brend:'Elago',         rang:'Shaffof, Qora',              razmer:'Airpods Pro/Max',       ishlab:"Koreya" },
+  86: { brend:'Spigen',        rang:'Qora, Kulrang',              razmer:'Apple Watch 7/8/9',     ishlab:"Koreya" },
+  87: { brend:'GiftBox',       rang:'Qizil, Oltin',               razmer:'Standart',              ishlab:"O'zbekiston" },
+  88: { brend:'LoveBox',       rang:'Qizil, Pushti',              razmer:'Standart',              ishlab:"O'zbekiston" },
+  89: { brend:'MomLove',       rang:'Pushti, Lavanda',            razmer:'Standart',              ishlab:"O'zbekiston" },
+  90: { brend:'KidsJoy',       rang:'Rang-barang',                razmer:'Standart',              ishlab:"Xitoy" },
+  91: { brend:'BizGift',       rang:'Qora, Oltin',                razmer:'Standart',              ishlab:"O'zbekiston" },
+  92: { brend:'NewYear',       rang:'Qizil, Yashil',              razmer:'Standart',              ishlab:"O'zbekiston" },
+  93: { brend:'Nike',          rang:'Oq, Qora, Kulrang',          razmer:'40-45',                 ishlab:"Vyetnam" },
+  94: { brend:'Zara',          rang:'Qizil, Qora, Nude',          razmer:'36-41',                 ishlab:"Ispaniya" },
+  95: { brend:'Clarks',        rang:'Jigarrang, Qora',            razmer:'40-45',                 ishlab:"Angliya" },
+  96: { brend:'Birkenstock',   rang:'Jigarrang, Qora',            razmer:'36-42',                 ishlab:"Germaniya" },
+  97: { brend:'UGG',           rang:'Jigarrang, Qora, Kulrang',   razmer:'36-41',                 ishlab:"AQSH" },
+  98: { brend:'Adidas',        rang:'Oq, Qora, Qizil',            razmer:'36-46',                 ishlab:"Xitoy" },
+  99: { brend:'Geox',          rang:"Ko'k, Pushti, Oq",           razmer:'20-35',                 ishlab:"Italiya" },
+  100:{ brend:'Crocs',         rang:'Rang-barang',                razmer:'36-45',                 ishlab:"AQSH" },
+  101:{ brend:'Ecco',          rang:'Qora, Jigarrang',            razmer:'40-45',                 ishlab:"Daniya" },
+  102:{ brend:'New Balance',   rang:"Oq, Kulrang, Ko'k",          razmer:'36-46',                 ishlab:"AQSH" },
+  103:{ brend:'TeddyCo',       rang:'Jigarrang, Kulrang',         razmer:'30 sm / 50 sm / 70 sm', ishlab:"Xitoy" },
+  104:{ brend:'Lego',          rang:'Rang-barang',                razmer:'200 dona',              ishlab:"Daniya" },
+  105:{ brend:'HotWheels',     rang:'Har xil',                    razmer:'10 dona',               ishlab:"Xitoy" },
+  106:{ brend:'Barbie',        rang:'Pushti',                     razmer:'30 sm',                 ishlab:"Xitoy" },
+  107:{ brend:'RoboKid',       rang:"Qizil, Ko'k",                razmer:'25 sm',                 ishlab:"Xitoy" },
+  108:{ brend:'PlayDoh',       rang:'12 xil rang',                razmer:'12 ta 50g',             ishlab:"AQSH" },
+  109:{ brend:'Puky',          rang:'Qizil, Ko\'k, Yashil',       razmer:'12 dyuym',              ishlab:"Germaniya" },
+  110:{ brend:'SandPlay',      rang:"Sariq, Ko'k",                razmer:'8 dona',                ishlab:"Xitoy" },
+  111:{ brend:'SensualCare',   rang:'Shaffof',                    razmer:'100 ml',                ishlab:"Fransiya" },
+  112:{ brend:'RomanceLight',  rang:'Qizil, Pushti',              razmer:'3 ta',                  ishlab:"Fransiya" },
+  113:{ brend:'CoupleDream',   rang:'Qizil, Qora, Pushti',        razmer:'S M L XL',              ishlab:"Turkiya" },
+  114:{ brend:'LuxLove',       rang:'Qizil',                      razmer:'Premium',               ishlab:"Italiya" },
+  115:{ brend:'Givenchy',      rang:'Shaffof',                    razmer:'50 ml',                 ishlab:"Fransiya" },
+  116:{ brend:'SilkBed',       rang:'Qizil, Pushti, Qora',        razmer:'50x70 sm',              ishlab:"Turkiya" },
+};
+
+// Mahsulot ma'lumotlarini birlashtirish
+products.forEach(p => {
+  const d = productDetails[p.id];
+  if (d) Object.assign(p, d);
+});
 
 let cart = [];
 
@@ -1540,10 +1673,15 @@ function openProdModal(id) {
   if (!p) return;
   document.getElementById('pmEmoji').textContent = p.emoji;
   document.getElementById('pmName').textContent = p.name;
-  document.getElementById('pmCat').textContent = p.cat;
+  document.getElementById('pmCat').textContent = '📦 ' + p.cat;
   document.getElementById('pmRating').textContent = '★'.repeat(Math.floor(p.rating)) + ' ' + p.rating;
   document.getElementById('pmPrice').textContent = formatPrice(p.price);
-  document.getElementById('pmOld').textContent = p.old ? formatPrice(p.old) : '';
+  const oldEl = document.getElementById('pmOld');
+  oldEl.textContent = p.old ? '🔖 Eski narx: ' + formatPrice(p.old) : '';
+  document.getElementById('pmBrend').textContent = p.brend || '—';
+  document.getElementById('pmRang').textContent = p.rang || '—';
+  document.getElementById('pmRazmer').textContent = p.razmer || '—';
+  document.getElementById('pmIshlab').textContent = p.ishlab || '—';
   document.getElementById('pmCartBtn').onclick = () => { addToCart(id); closeProdModalDirect(); };
   document.getElementById('prodModal').classList.add('open');
 }
