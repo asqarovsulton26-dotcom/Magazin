@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOZOR — Online Do'kon</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F5F3EF;
+    --dark: #1A1A18;
+    --accent: #C8873A;
+    --light: #FFFFFF;
+    --muted: #888880;
+    --border: #E0DDD7;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--dark);
+    min-height: 100vh;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 48px;
+    height: 64px;
+    z-index: 100;
+  }
+
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    letter-spacing: 4px;
+    color: var(--dark);
+    text-decoration: none;
+  }
+
+  .logo span { color: var(--accent); }
+
+  nav ul {
+    list-style: none;
+    display: flex; gap: 36px;
+  }
+
+  nav ul a {
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    transition: color .2s;
+  }
+
+  nav ul a:hover { color: var(--dark); }
+
+  .nav-icons { display: flex; gap: 20px; align-items: center; }
+
+  .nav-icon {
+    background: none; border: none; cursor: pointer;
+    font-size: 18px; color: var(--dark);
+    position: relative;
+  }
+
+  .cart-badge {
+    position: absolute; top: -6px; right: -8px;
+    background: var(--accent); color: white;
+    font-size: 9px; font-weight: 700;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* HERO */
+  .hero {
+    margin-top: 64px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    min-height: calc(100vh - 64px);
+  }
+
+  .hero-left {
+    display: flex; flex-direction: column;
+    justify-content: center;
+    padding: 80px 64px;
+  }
+
+  .hero-tag {
+    font-size: 11px; letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(42px, 5vw, 72px);
+    line-height: 1.1;
+    margin-bottom: 28px;
+    color: var(--dark);
+  }
+
+  .hero-sub {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 380px;
+    margin-bottom: 48px;
+  }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 12px;
+    background: var(--dark);
+    color: var(--light);
+    padding: 16px 36px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: none; cursor: pointer;
+    transition: background .25s, transform .2s;
+    width: fit-content;
+  }
+
+  .btn-primary:hover { background: var(--accent); transform: translateY(-1px); }
+
+  .btn-outline {
+    display: inline-flex; align-items: center; gap: 10px;
+    border: 1.5px solid var(--dark);
+    color: var(--dark);
+    padding: 14px 32px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    background: none; cursor: pointer;
+    transition: all .25s;
+    width: fit-content;
+  }
+
+  .btn-outline:hover { background: var(--dark); color: var(--light); }
+
+  .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+
+  .hero-right {
+    background: #E8E3DA;
+    position: relative;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .hero-image-placeholder {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 16px;
+  }
+
+  .hero-circles {
+    position: absolute;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #C8873A22, #C8873A44);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .hero-circle-2 {
+    position: absolute;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #C8873A33, #1A1A1822);
+    top: 30%; left: 40%;
+  }
+
+  .hero-product-card {
+    position: relative; z-index: 2;
+    background: white;
+    padding: 32px;
+    width: 260px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+    text-align: center;
+    animation: float 4s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  .hero-product-emoji { font-size: 72px; margin-bottom: 12px; }
+
+  .hero-product-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; margin-bottom: 6px;
+  }
+
+  .hero-product-price {
+    color: var(--accent); font-weight: 700; font-size: 20px;
+  }
+
+  /* STATS */
+  .stats {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .stat {
+    padding: 40px;
+    text-align: center;
+    border-right: 1px solid var(--border);
+  }
+
+  .stat:last-child { border-right: none; }
+
+  .stat-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 40px;
+    color: var(--accent);
+  }
+
+  .stat-label {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  /* CATEGORIES */
+  .section { padding: 80px 48px; }
+
+  .section-header {
+    display: flex; align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 48px;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+  }
+
+  .section-link {
+    font-size: 12px; letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent);
+    padding-bottom: 2px;
+  }
+
+  .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+  }
+
+  .cat-card {
+    background: #E8E3DA;
+    padding: 48px 32px;
+    text-align: center;
+    cursor: pointer;
+    transition: background .25s, transform .2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cat-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--dark);
+    opacity: 0;
+    transition: opacity .25s;
+  }
+
+  .cat-card:hover::after { opacity: 0.04; }
+  .cat-card:hover { transform: translateY(-4px); }
+
+  .cat-icon { font-size: 48px; margin-bottom: 16px; }
+  .cat-name { font-weight: 500; font-size: 15px; margin-bottom: 4px; }
+  .cat-count { font-size: 12px; color: var(--muted); }
+
+  /* PRODUCTS */
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+
+  .product-card {
+    background: var(--light);
+    cursor: pointer;
+    transition: transform .25s, box-shadow .25s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 48px rgba(0,0,0,0.1);
+  }
+
+  .product-img {
+    width: 100%;
+    aspect-ratio: 1;
+    background: #EDE9E2;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 64px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .product-badge {
+    position: absolute; top: 12px; left: 12px;
+    background: var(--accent);
+    color: white;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+  }
+
+  .product-badge.new { background: var(--dark); }
+
+  .product-actions {
+    position: absolute; bottom: -48px; left: 0; right: 0;
+    display: flex; gap: 0;
+    transition: bottom .25s;
+  }
+
+  .product-card:hover .product-actions { bottom: 0; }
+
+  .prod-action-btn {
+    flex: 1;
+    background: var(--dark); color: white;
+    border: none; cursor: pointer;
+    padding: 14px 0;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: background .2s;
+  }
+
+  .prod-action-btn:hover { background: var(--accent); }
+  .prod-action-btn + .prod-action-btn { border-left: 1px solid #333; }
+
+  .product-info { padding: 20px; }
+  .product-name { font-size: 15px; font-weight: 500; margin-bottom: 6px; }
+  .product-sub { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+
+  .product-footer {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .product-price { font-size: 18px; font-weight: 700; color: var(--dark); }
+  .product-old-price { font-size: 13px; color: var(--muted); text-decoration: line-through; margin-left: 8px; }
+
+  .stars { color: var(--accent); font-size: 12px; }
+
+  /* BANNER */
+  .banner {
+    margin: 0 48px 80px;
+    background: var(--dark);
+    padding: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: relative; overflow: hidden;
+  }
+
+  .banner::before {
+    content: '';
+    position: absolute;
+    right: -80px; top: -80px;
+    width: 360px; height: 360px;
+    border-radius: 50%;
+    border: 80px solid rgba(200,135,58,0.15);
+  }
+
+  .banner-text { position: relative; z-index: 1; }
+  .banner-tag { color: var(--accent); font-size: 11px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 16px; }
+  .banner-title { font-family: 'Playfair Display', serif; font-size: 48px; color: white; margin-bottom: 12px; }
+  .banner-sub { color: #999; font-size: 15px; }
+  .banner-action { position: relative; z-index: 1; }
+
+  /* TESTIMONIALS */
+  .testimonials { background: white; }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+
+  .testimonial {
+    padding: 36px;
+    border: 1px solid var(--border);
+    position: relative;
+  }
+
+  .testimonial::before {
+    content: '"';
+    font-family: 'Playfair Display', serif;
+    font-size: 80px;
+    color: var(--accent);
+    opacity: 0.3;
+    position: absolute;
+    top: 8px; left: 24px;
+    line-height: 1;
+  }
+
+  .testimonial-text { font-size: 14px; line-height: 1.8; color: #555; margin-bottom: 24px; padding-top: 32px; }
+
+  .testimonial-author { display: flex; align-items: center; gap: 12px; }
+  .author-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--border); font-size: 18px; display: flex; align-items: center; justify-content: center; }
+  .author-name { font-weight: 600; font-size: 14px; }
+  .author-city { font-size: 12px; color: var(--muted); }
+
+  /* NEWSLETTER */
+  .newsletter {
+    padding: 80px 48px;
+    text-align: center;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+  }
+
+  .newsletter-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    margin-bottom: 16px;
+  }
+
+  .newsletter-sub { color: var(--muted); margin-bottom: 40px; font-size: 15px; }
+
+  .newsletter-form {
+    display: flex;
+    max-width: 460px; margin: 0 auto;
+    border: 1.5px solid var(--dark);
+  }
+
+  .newsletter-input {
+    flex: 1;
+    padding: 16px 20px;
+    border: none; background: white;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px; outline: none;
+  }
+
+  .newsletter-btn {
+    background: var(--dark); color: white;
+    border: none; padding: 16px 28px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 500;
+    letter-spacing: 1px; text-transform: uppercase;
+    cursor: pointer; transition: background .2s;
+  }
+
+  .newsletter-btn:hover { background: var(--accent); }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark); color: #aaa;
+    padding: 64px 48px 32px;
+  }
+
+  .footer-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px; margin-bottom: 48px;
+  }
+
+  .footer-brand .logo { color: white; display: block; margin-bottom: 16px; }
+  .footer-desc { font-size: 13px; line-height: 1.8; max-width: 260px; }
+
+  .footer-col h4 {
+    font-size: 11px; letter-spacing: 2px;
+    text-transform: uppercase; color: white;
+    margin-bottom: 20px;
+  }
+
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 12px; }
+  .footer-col ul a { color: #888; font-size: 14px; text-decoration: none; transition: color .2s; }
+  .footer-col ul a:hover { color: var(--accent); }
+
+  .footer-bottom {
+    border-top: 1px solid #2a2a28;
+    padding-top: 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 12px;
+  }
+
+  .social-links { display: flex; gap: 16px; }
+  .social-link { color: #666; text-decoration: none; font-size: 20px; transition: color .2s; }
+  .social-link:hover { color: var(--accent); }
+
+  /* CART DRAWER */
+  .cart-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 200;
+    opacity: 0; pointer-events: none;
+    transition: opacity .3s;
+  }
+
+  .cart-overlay.open { opacity: 1; pointer-events: all; }
+
+  .cart-drawer {
+    position: fixed; top: 0; right: -420px;
+    width: 420px; height: 100vh;
+    background: var(--light);
+    z-index: 201;
+    transition: right .35s cubic-bezier(.25,.46,.45,.94);
+    display: flex; flex-direction: column;
+  }
+
+  .cart-drawer.open { right: 0; }
+
+  .cart-header {
+    padding: 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .cart-title { font-family: 'Playfair Display', serif; font-size: 22px; }
+
+  .cart-close {
+    background: none; border: none; font-size: 22px; cursor: pointer; color: var(--dark);
+  }
+
+  .cart-items { flex: 1; overflow-y: auto; padding: 24px; }
+
+  .cart-item {
+    display: flex; gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .cart-item-img {
+    width: 80px; height: 80px; flex-shrink: 0;
+    background: #EDE9E2;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px;
+  }
+
+  .cart-item-info { flex: 1; }
+  .cart-item-name { font-weight: 500; margin-bottom: 4px; font-size: 14px; }
+  .cart-item-price { color: var(--accent); font-weight: 700; }
+
+  .cart-item-qty {
+    display: flex; align-items: center; gap: 12px; margin-top: 8px;
+  }
+
+  .qty-btn {
+    width: 28px; height: 28px;
+    border: 1px solid var(--border);
+    background: none; cursor: pointer; font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .2s;
+  }
+
+  .qty-btn:hover { background: var(--dark); color: white; border-color: var(--dark); }
+
+  .cart-footer {
+    padding: 24px 28px;
+    border-top: 1px solid var(--border);
+  }
+
+  .cart-total {
+    display: flex; justify-content: space-between;
+    font-size: 18px; font-weight: 700;
+    margin-bottom: 20px;
+  }
+
+  .empty-cart {
+    text-align: center; padding: 60px 0; color: var(--muted);
+  }
+
+  .empty-cart-icon { font-size: 56px; margin-bottom: 16px; }
+
+  /* SEARCH BAR */
+  .search-bar {
+    position: fixed; top: 64px; left: 0; right: 0;
+    background: var(--light);
+    padding: 20px 48px;
+    border-bottom: 1px solid var(--border);
+    display: none; z-index: 99;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+
+  .search-bar.show { display: flex; gap: 16px; align-items: center; }
+
+  .search-input {
+    flex: 1; padding: 12px 20px;
+    border: 1.5px solid var(--border);
+    font-family: 'DM Sans', sans-serif; font-size: 15px;
+    outline: none; background: var(--bg);
+    transition: border-color .2s;
+  }
+
+  .search-input:focus { border-color: var(--accent); }
+
+  /* NOTIFICATION */
+  .notification {
+    position: fixed; bottom: 32px; right: 32px;
+    background: var(--dark); color: white;
+    padding: 16px 24px;
+    font-size: 14px;
+    display: flex; align-items: center; gap: 12px;
+    transform: translateY(80px); opacity: 0;
+    transition: all .35s;
+    z-index: 300;
+  }
+
+  .notification.show { transform: translateY(0); opacity: 1; }
+
+  .filter-tabs {
+    display: flex; gap: 10px; flex-wrap: wrap;
+    margin-bottom: 36px;
+  }
+
+  .filter-tab {
+    padding: 10px 22px;
+    border: 1.5px solid var(--border);
+    background: none; cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 500;
+    letter-spacing: 0.5px;
+    color: var(--muted);
+    transition: all .2s;
+  }
+
+  .filter-tab:hover { border-color: var(--dark); color: var(--dark); }
+
+  .filter-tab.active {
+    background: var(--dark); color: white;
+    border-color: var(--dark);
+  }
+
+  .filter-tab.food-tab.active {
+    background: #3a7d3a; border-color: #3a7d3a;
+  }
+
+  .filter-tab.food-tab:hover:not(.active) {
+    border-color: #3a7d3a; color: #3a7d3a;
+  }
+
+  .filter-tab.kosmetika-tab.active { background: #c2478a; border-color: #c2478a; }
+  .filter-tab.kosmetika-tab:hover:not(.active) { border-color: #c2478a; color: #c2478a; }
+  .filter-tab.bijuteriya-tab.active { background: #7b5ea7; border-color: #7b5ea7; }
+  .filter-tab.bijuteriya-tab:hover:not(.active) { border-color: #7b5ea7; color: #7b5ea7; }
+  .filter-tab.shirinlik-tab.active { background: #c0642b; border-color: #c0642b; }
+  .filter-tab.shirinlik-tab:hover:not(.active) { border-color: #c0642b; color: #c0642b; }
+  .filter-tab.xojalik-tab.active { background: #2b7ab5; border-color: #2b7ab5; }
+  .filter-tab.xojalik-tab:hover:not(.active) { border-color: #2b7ab5; color: #2b7ab5; }
+  .filter-tab.romol-tab.active { background: #b55e2b; border-color: #b55e2b; }
+  .filter-tab.romol-tab:hover:not(.active) { border-color: #b55e2b; color: #b55e2b; }
+  .filter-tab.ichki-tab.active { background: #a0456e; border-color: #a0456e; }
+  .filter-tab.ichki-tab:hover:not(.active) { border-color: #a0456e; color: #a0456e; }
+  .filter-tab.dori-tab.active { background: #2e7d4f; border-color: #2e7d4f; }
+  .filter-tab.dori-tab:hover:not(.active) { border-color: #2e7d4f; color: #2e7d4f; }
+  .filter-tab.bola-tab.active { background: #e67e22; border-color: #e67e22; }
+  .filter-tab.bola-tab:hover:not(.active) { border-color: #e67e22; color: #e67e22; }
+  .filter-tab.sumka-tab.active { background: #8e44ad; border-color: #8e44ad; }
+  .filter-tab.sumka-tab:hover:not(.active) { border-color: #8e44ad; color: #8e44ad; }
+  .filter-tab.rikzak-tab.active { background: #16a085; border-color: #16a085; }
+  .filter-tab.rikzak-tab:hover:not(.active) { border-color: #16a085; color: #16a085; }
+  .filter-tab.chexol-tab.active { background: #2c3e50; border-color: #2c3e50; }
+  .filter-tab.chexol-tab:hover:not(.active) { border-color: #2c3e50; color: #2c3e50; }
+  .filter-tab.sovga-tab.active { background: #c0392b; border-color: #c0392b; }
+  .filter-tab.sovga-tab:hover:not(.active) { border-color: #c0392b; color: #c0392b; }
+  .filter-tab.oyoq-tab.active { background: #6d4c41; border-color: #6d4c41; }
+  .filter-tab.oyoq-tab:hover:not(.active) { border-color: #6d4c41; color: #6d4c41; }
+  .filter-tab.oyinchoq-tab.active { background: #f39c12; border-color: #f39c12; }
+  .filter-tab.oyinchoq-tab:hover:not(.active) { border-color: #f39c12; color: #f39c12; }
+  .filter-tab.intim-tab { border-color: #c0392b; color: #c0392b; }
+  .filter-tab.intim-tab.active, .filter-tab.intim-tab:hover { background: #c0392b; color: white; border-color: #c0392b; }
+
+  .product-card.oyoq .product-img { background: #efebe9; }
+  .product-card.oyoq .product-badge { background: #6d4c41; }
+  .product-card.oyinchoq .product-img { background: #fffde7; }
+  .product-card.oyinchoq .product-badge { background: #f39c12; }
+  .product-card.intim .product-img { background: #fce4ec; }
+  .product-card.intim .product-badge { background: #c0392b; }
+
+  /* Age Warning Modal */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 500;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity .3s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal-box {
+    background: white;
+    padding: 48px;
+    max-width: 420px; width: 90%;
+    text-align: center;
+  }
+  .modal-icon { font-size: 56px; margin-bottom: 16px; }
+  .modal-title { font-family: 'Playfair Display', serif; font-size: 26px; margin-bottom: 12px; }
+  .modal-text { color: var(--muted); font-size: 14px; line-height: 1.7; margin-bottom: 32px; }
+  .modal-btns { display: flex; gap: 12px; justify-content: center; }
+  .modal-btn-yes {
+    background: var(--dark); color: white;
+    border: none; padding: 14px 32px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 600;
+    letter-spacing: 1px; text-transform: uppercase;
+    cursor: pointer; transition: background .2s;
+  }
+  .modal-btn-yes:hover { background: #c0392b; }
+  .modal-btn-no {
+    background: none; color: var(--muted);
+    border: 1.5px solid var(--border); padding: 14px 32px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; cursor: pointer; transition: all .2s;
+  }
+  .modal-btn-no:hover { border-color: var(--dark); color: var(--dark); }
+
+  .product-card.oyoq .product-img { background: #efebe9; }
+  .product-card.oyoq .product-badge { background: #6d4c41; }
+
+  .product-card.sumka .product-img { background: #f3e5f5; }
+  .product-card.sumka .product-badge { background: #8e44ad; }
+  .product-card.rikzak .product-img { background: #e0f7f4; }
+  .product-card.rikzak .product-badge { background: #16a085; }
+  .product-card.chexol .product-img { background: #ecf0f1; }
+  .product-card.chexol .product-badge { background: #2c3e50; }
+  .product-card.sovga .product-img { background: #fdecea; }
+  .product-card.sovga .product-badge { background: #c0392b; }
+
+  .product-card.bola .product-img { background: #fff8e1; }
+  .product-card.bola .product-badge { background: #e67e22; }
+
+  .product-card.xojalik .product-img { background: #e3f0fb; }
+  .product-card.xojalik .product-badge { background: #2b7ab5; }
+  .product-card.romol .product-img { background: #fdebd0; }
+  .product-card.romol .product-badge { background: #b55e2b; }
+  .product-card.ichki .product-img { background: #fce4ef; }
+  .product-card.ichki .product-badge { background: #a0456e; }
+  .product-card.dori .product-img { background: #e8f5ee; }
+  .product-card.dori .product-badge { background: #2e7d4f; }
+
+
+
+  .product-card.kosmetika .product-img { background: #fce4f3; }
+  .product-card.kosmetika .product-badge { background: #c2478a; }
+  .product-card.bijuteriya .product-img { background: #ede7f6; }
+  .product-card.bijuteriya .product-badge { background: #7b5ea7; }
+  .product-card.shirinlik .product-img { background: #fff3e0; }
+  .product-card.shirinlik .product-badge { background: #c0642b; }
+
+
+
+
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { height: 320px; }
+    .products-grid { grid-template-columns: repeat(2, 1fr); }
+    .categories-grid { grid-template-columns: repeat(2, 1fr); }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    nav { padding: 0 24px; }
+    .section { padding: 60px 24px; }
+    nav ul { display: none; }
+  }
+
+  .viloyat-tags {
+    display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+  }
+  .vtag {
+    font-size: 11px; color: var(--muted);
+    cursor: pointer; letter-spacing: 0.3px;
+    transition: color .2s;
+    white-space: nowrap;
+  }
+  .vtag:hover, .vtag.active { color: var(--accent); }
+  .vtag + .vtag::before {
+    content: '·';
+    margin-right: 6px;
+    color: var(--border);
+  }
+
+  /* VILOYAT SELECTOR */
+  .viloyat-selector {
+    display: flex; align-items: center; gap: 6px;
+    padding: 7px 14px;
+    border: 1.5px solid var(--border);
+    cursor: pointer; font-size: 13px; font-weight: 500;
+    color: var(--dark); background: white;
+    transition: border-color .2s; position: relative; white-space: nowrap;
+  }
+  .viloyat-selector:hover, .viloyat-selector.open { border-color: var(--accent); color: var(--accent); }
+  .viloyat-arrow { font-size: 10px; color: var(--muted); transition: transform .2s; }
+  .viloyat-selector.open .viloyat-arrow { transform: rotate(180deg); }
+  .viloyat-dropdown {
+    position: fixed; top: 64px; left: 0;
+    width: 340px; background: white;
+    border: 1px solid var(--border);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.14);
+    z-index: 150; display: none;
+  }
+  .viloyat-dropdown.open { display: block; }
+  .viloyat-header {
+    padding: 14px 20px; font-size: 11px; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); border-bottom: 1px solid var(--border);
+  }
+  .viloyat-list { display: grid; grid-template-columns: 1fr 1fr; }
+  .viloyat-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 13px 20px; cursor: pointer; font-size: 13px;
+    border-bottom: 1px solid var(--border); transition: background .15s;
+  }
+  .viloyat-item:hover { background: var(--bg); }
+  .viloyat-item.selected { background: #fff8f0; color: var(--accent); font-weight: 600; }
+  .viloyat-emoji { font-size: 20px; }
+  .delivery-bar {
+    position: fixed; top: 64px; left: 0; right: 0;
+    background: #fff8f0; border-bottom: 1px solid #f0d5b0;
+    padding: 9px 48px; font-size: 13px; color: #a06020;
+    display: none; align-items: center; gap: 8px; z-index: 98;
+  }
+  .delivery-bar.show { display: flex; }
+  body.has-delivery-bar .hero { margin-top: calc(64px + 38px); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div style="display:flex; align-items:center; gap:12px;">
+    <a href="#" class="logo">BOZ<span>O</span>R</a>
+    <span style="font-size:11px; color:var(--muted); letter-spacing:1px;">24/7 &nbsp;·&nbsp; 12 viloyat</span>
+  </div>
+  <ul>
+    <li><a href="#categories">Kategoriyalar</a></li>
+    <li><a href="#products">Mahsulotlar</a></li>
+    <li><a href="#about">Haqida</a></li>
+    <li><a href="#contact">Aloqa</a></li>
+  </ul>
+  <div class="nav-icons">
+    <button class="nav-icon" onclick="toggleSearch()" title="Qidirish">🔍</button>
+    <button class="nav-icon" onclick="toggleCart()" title="Savat">
+      🛒
+      <span class="cart-badge" id="cartBadge">0</span>
+    </button>
+  </div>
+</nav>
+
+<!-- DELIVERY BAR -->
+<div class="delivery-bar" id="deliveryBar">
+  <span>🚚</span>
+  <span id="deliveryText"></span>
+</div>
+<div class="search-bar" id="searchBar">
+  <input type="text" class="search-input" placeholder="Mahsulot qidiring..." id="searchInput" oninput="filterProducts(this.value)">
+  <button class="btn-primary" style="padding: 12px 24px;" onclick="toggleSearch()">Yopish</button>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-tag">✦ Yangi Kolleksiya 2026</p>
+    <h1 class="hero-title">Sifatli<br>Mahsulotlar<br>Bir Joyda</h1>
+    <p class="hero-sub">Kiyim, elektronika, oziq-ovqat va yana ko'p narsalar — barchasi eng yaxshi narxlarda. Tez yetkazib berish kafolatlanadi.</p>
+    <div class="hero-btns">
+      <a href="#products" class="btn-primary">Xarid Qilish →</a>
+      <a href="#categories" class="btn-outline">Kategoriyalar</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-circles"></div>
+    <div class="hero-circle-2"></div>
+    <div class="hero-product-card">
+      <div class="hero-product-emoji">👟</div>
+      <div class="hero-product-name">Trendy Krossovka</div>
+      <div class="hero-product-price">459 000 so'm</div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat">
+    <div class="stat-number">12K+</div>
+    <div class="stat-label">Mahsulotlar</div>
+  </div>
+  <div class="stat">
+    <div class="stat-number">98%</div>
+    <div class="stat-label">Mijozlar mamnuniyati</div>
+  </div>
+  <div class="stat">
+    <div class="stat-number">1–3</div>
+    <div class="stat-label">Kunlik yetkazib berish</div>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<section class="section" id="categories">
+  <div class="section-header">
+    <h2 class="section-title">Kategoriyalar</h2>
+    <a href="#" class="section-link">Barchasini ko'rish</a>
+  </div>
+  <div class="categories-grid">
+    <div class="cat-card" onclick="filterByCategory('Kiyim')">
+      <div class="cat-icon">👗</div>
+      <div class="cat-name">Kiyim-kechak</div>
+      <div class="cat-count">2 400+ mahsulot</div>
+    </div>
+    <div class="cat-card" onclick="filterByCategory('Elektronika')">
+      <div class="cat-icon">📱</div>
+      <div class="cat-name">Elektronika</div>
+      <div class="cat-count">1 800+ mahsulot</div>
+    </div>
+    <div class="cat-card" onclick="filterByCategory('Uy')">
+      <div class="cat-icon">🏠</div>
+      <div class="cat-name">Uy va Bog'</div>
+      <div class="cat-count">3 200+ mahsulot</div>
+    </div>
+    <div class="cat-card" onclick="filterByCategory('Sport')">
+      <div class="cat-icon">⚽</div>
+      <div class="cat-name">Sport</div>
+      <div class="cat-count">980+ mahsulot</div>
+    </div>
+    <div class="cat-card" onclick="filterByCategory('Oziq-ovqat')">
+      <div class="cat-icon">🥦</div>
+      <div class="cat-name">Meva & Sabzavot</div>
+      <div class="cat-count">450+ mahsulot</div>
+    </div>
+    <div class="cat-card" onclick="filterByCategory('Kosmetika')">
+      <div class="cat-icon">💄</div>
+      <div class="cat-name">Kosmetika</div>
+      <div class="cat-count">620+ mahsulot</div>
+    </div>
+    <div class="cat-card" onclick="filterByCategory('Bijuteriya')">
+      <div class="cat-icon">💍</div>
+      <div class="cat-name">Bijuteriya</div>
+      <div class="cat-count">380+ mahsulot</div>
+    </div>
+    <div class="cat-card" onclick="filterByCategory('Shirinliklar')">
+      <div class="cat-icon">🍰</div>
+      <div class="cat-name">Shirinliklar</div>
+      <div class="cat-count">290+ mahsulot</div>
+    </div>
+    <div class="cat-card" onclick="filterByCategory('Xojalik')">
+      <div class="cat-icon">🧹</div>
+      <div class="cat-name">Xo'jalik mollari</div>
+      <div class="cat-count">540+ mahsulot</div>
+    </div>
+    <div class="cat-card" onclick="filterByCategory('Romol')">
+      <div class="cat-icon">🧣</div>
+      <div class="cat-name">Ro'mollar</div>
+      <div class="cat-count">320+ mahsulot</div>
+    </div>
+    <div class="cat-card" onclick="filterByCategory('IchkiKiyim')">
+      <div class="cat-icon">👙</div>
+      <div class="cat-name">Ichki kiyimlar</div>
+      <div class="cat-count">410+ mahsulot</div>
+    </div>
+    <div class="cat-card" onclick="filterByCategory('Dori')">
+      <div class="cat-icon">🌿</div>
+      <div class="cat-name">Tabiiy dorilar</div>
+      <div class="cat-count">180+ mahsulot</div>
+    </div>
+    <div class="cat-card" onclick="filterByCategory('BolalarKiyim')">
+      <div class="cat-icon">👶</div>
+      <div class="cat-name">Bolalar kiyimi</div>
+      <div class="cat-count">730+ mahsulot</div>
+    </div>
+    <div class="cat-card" onclick="filterByCategory('Sumka')">
+      <div class="cat-icon">👜</div>
+      <div class="cat-name">So'mkalar</div>
+      <div class="cat-count">560+ mahsulot</div>
+    </div>
+    <div class="cat-card" onclick="filterByCategory('Rikzak')">
+      <div class="cat-icon">🎒</div>
+      <div class="cat-name">Rikzaklar</div>
+      <div class="cat-count">340+ mahsulot</div>
+    </div>
+    <div class="cat-card" onclick="filterByCategory('Chexol')">
+      <div class="cat-icon">📱</div>
+      <div class="cat-name">Chexollar</div>
+      <div class="cat-count">820+ mahsulot</div>
+    </div>
+    <div class="cat-card" onclick="filterByCategory('Sovga')">
+      <div class="cat-icon">🎁</div>
+      <div class="cat-name">Sovg'alar</div>
+      <div class="cat-count">420+ mahsulot</div>
+    </div>
+    <div class="cat-card" onclick="filterByCategory('OyoqKiyim')">
+      <div class="cat-icon">👟</div>
+      <div class="cat-name">Oyoq kiyimlari</div>
+      <div class="cat-count">650+ mahsulot</div>
+    </div>
+    <div class="cat-card" onclick="filterByCategory('Oyinchoq')">
+      <div class="cat-icon">🧸</div>
+      <div class="cat-name">Bolalar o'yinchoqlari</div>
+      <div class="cat-count">480+ mahsulot</div>
+    </div>
+    <div class="cat-card" onclick="showAgeWarning()" style="border: 1.5px solid #c0392b;">
+      <div class="cat-icon">🔞</div>
+      <div class="cat-name" style="color:#c0392b;">Intimniy (18+)</div>
+      <div class="cat-count">210+ mahsulot</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="section" id="products" style="background: white;">
+  <div class="section-header">
+    <h2 class="section-title">Mashhur Mahsulotlar</h2>
+    <a href="#" class="section-link">Barchasini ko'rish</a>
+  </div>
+  <div class="filter-tabs" id="filterTabs">
+    <button class="filter-tab active" onclick="setFilter('Barchasi', this)">🛍️ Barchasi</button>
+    <button class="filter-tab" onclick="setFilter('Kiyim', this)">👗 Kiyim</button>
+    <button class="filter-tab" onclick="setFilter('Elektronika', this)">📱 Elektronika</button>
+    <button class="filter-tab" onclick="setFilter('Uy', this)">🏠 Uy</button>
+    <button class="filter-tab" onclick="setFilter('Sport', this)">⚽ Sport</button>
+    <button class="filter-tab food-tab" onclick="setFilter('Oziq-ovqat', this)">🥦 Meva &amp; Sabzavot</button>
+    <button class="filter-tab kosmetika-tab" onclick="setFilter('Kosmetika', this)">💄 Kosmetika</button>
+    <button class="filter-tab bijuteriya-tab" onclick="setFilter('Bijuteriya', this)">💍 Bijuteriya</button>
+    <button class="filter-tab shirinlik-tab" onclick="setFilter('Shirinliklar', this)">🍰 Shirinliklar</button>
+    <button class="filter-tab xojalik-tab" onclick="setFilter('Xojalik', this)">🧹 Xo'jalik</button>
+    <button class="filter-tab romol-tab" onclick="setFilter('Romol', this)">🧣 Ro'mollar</button>
+    <button class="filter-tab ichki-tab" onclick="setFilter('IchkiKiyim', this)">👙 Ichki kiyim</button>
+    <button class="filter-tab dori-tab" onclick="setFilter('Dori', this)">🌿 Tabiiy dori</button>
+    <button class="filter-tab bola-tab" onclick="setFilter('BolalarKiyim', this)">👶 Bolalar kiyimi</button>
+    <button class="filter-tab sumka-tab" onclick="setFilter('Sumka', this)">👜 So'mkalar</button>
+    <button class="filter-tab rikzak-tab" onclick="setFilter('Rikzak', this)">🎒 Rikzaklar</button>
+    <button class="filter-tab chexol-tab" onclick="setFilter('Chexol', this)">📱 Chexollar</button>
+    <button class="filter-tab sovga-tab" onclick="setFilter('Sovga', this)">🎁 Sovg'alar</button>
+    <button class="filter-tab oyoq-tab" onclick="setFilter('OyoqKiyim', this)">👟 Oyoq kiyimi</button>
+    <button class="filter-tab oyinchoq-tab" onclick="setFilter('Oyinchoq', this)">🧸 O'yinchoqlar</button>
+    <button class="filter-tab intim-tab" onclick="showAgeWarning()">🔞 Intimniy (18+)</button>
+  </div>
+  <div class="products-grid" id="productsGrid"></div>
+</section>
+
+<!-- BANNER -->
+<div class="banner">
+  <div class="banner-text">
+    <div class="banner-tag">✦ Cheklangan taklif</div>
+    <h2 class="banner-title">Yangi Yil<br>Chegirmalari</h2>
+    <p class="banner-sub">Barcha mahsulotlarda 30% gacha chegirma</p>
+  </div>
+  <div class="banner-action">
+    <button class="btn-primary" onclick="showNotification('Taklif saqlandi! ✓')">Hozir Foydalanish →</button>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<section class="section testimonials">
+  <div class="section-header">
+    <h2 class="section-title">Mijozlar Fikri</h2>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testimonial">
+      <p class="testimonial-text">Mahsulotlar juda sifatli, yetkazib berish ham tez bo'ldi. Keyingi safar ham bu do'konga qaytaman. Har bir narsani tez va oson topdim.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">👩</div>
+        <div>
+          <div class="author-name">Malika Yusupova</div>
+          <div class="author-city">Toshkent ⭐⭐⭐⭐⭐</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial">
+      <p class="testimonial-text">Narxlar juda qulay! Boshqa do'konlardan anchaga arzon va sifat ham yuqori. Har oyda xarid qilaman.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">👨</div>
+        <div>
+          <div class="author-name">Jasur Toshmatov</div>
+          <div class="author-city">Samarqand ⭐⭐⭐⭐⭐</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial">
+      <p class="testimonial-text">Sayt ishlatish juda qulay, mahsulot qidirish oson. Xarid qilish jarayoni ham sodda va tushinarli.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">👩</div>
+        <div>
+          <div class="author-name">Nilufar Rahimova</div>
+          <div class="author-city">Buxoro ⭐⭐⭐⭐⭐</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="newsletter">
+  <h2 class="newsletter-title">Yangiliklar olib turing</h2>
+  <p class="newsletter-sub">Chegirmalar va yangi mahsulotlar haqida birinchilar qatorida bilib oling</p>
+  <div class="newsletter-form">
+    <input type="email" class="newsletter-input" placeholder="Email manzilingiz...">
+    <button class="newsletter-btn" onclick="showNotification('Obuna bo\'ldingiz! ✓')">Obuna bo'lish</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#" class="logo">BOZ<span style="color:var(--accent)">O</span>R</a>
+      <p class="footer-desc">O'zbekistonning ishonchli internet do'koni. Sifat va arzonlik bizning asosiy tamoyilimiz.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Do'kon</h4>
+      <ul>
+        <li><a href="#">Yangi mahsulotlar</a></li>
+        <li><a href="#">Chegirmalar</a></li>
+        <li><a href="#">Brendlar</a></li>
+        <li><a href="#">Aksiya</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Yordam</h4>
+      <ul>
+        <li><a href="#">Savol-javob</a></li>
+        <li><a href="#">Yetkazib berish</a></li>
+        <li><a href="#">Qaytarish</a></li>
+        <li><a href="#">Bog'lanish</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Kompaniya</h4>
+      <ul>
+        <li><a href="#">Haqimizda</a></li>
+        <li><a href="#">Karyera</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Hamkorlik</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 BOZOR. Barcha huquqlar himoyalangan.</p>
+    <div class="social-links">
+      <a href="#" class="social-link">📘</a>
+      <a href="#" class="social-link">📸</a>
+      <a href="#" class="social-link">✈️</a>
+    </div>
+  </div>
+</footer>
+
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h2 class="cart-title">Savat</h2>
+    <button class="cart-close" onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-footer" id="cartFooter"></div>
+</div>
+
+<!-- NOTIFICATION -->
+<div class="notification" id="notification">
+  <span>✓</span>
+  <span id="notifText">Savatga qo'shildi!</span>
+</div>
+
+<!-- AGE WARNING MODAL -->
+<div class="modal-overlay" id="ageModal">
+  <div class="modal-box">
+    <div class="modal-icon">🔞</div>
+    <h2 class="modal-title">Yoshga oid cheklov</h2>
+    <p class="modal-text">Bu bo'lim faqat <strong>18 yoshdan katta</strong> shaxslar uchun mo'ljallangan. Davom etish uchun yoshingizni tasdiqlang.</p>
+    <div class="modal-btns">
+      <button class="modal-btn-yes" onclick="confirmAge()">Ha, 18+ yoshdaman</button>
+      <button class="modal-btn-no" onclick="closeAgeModal()">Orqaga</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const products = [
+  { id:1,  name:"Elegante Ko'ylak",    cat:'Kiyim',       price:189000,   old:250000,   emoji:'👗', badge:'Chegirma', rating:4.8 },
+  { id:2,  name:'iPhone 15 Pro',       cat:'Elektronika', price:12900000, old:null,      emoji:'📱', badge:'Yangi',    rating:5.0 },
+  { id:3,  name:"Yog'och Stol",        cat:'Uy',          price:890000,   old:1100000,  emoji:'🪑', badge:'Chegirma', rating:4.6 },
+  { id:4,  name:"Futbol To'pi",        cat:'Sport',       price:129000,   old:null,      emoji:'⚽', badge:'Yangi',    rating:4.7 },
+  { id:5,  name:'Termal Kurtka',       cat:'Kiyim',       price:459000,   old:580000,   emoji:'🧥', badge:'Chegirma', rating:4.9 },
+  { id:6,  name:'Eshkak Mashinasi',    cat:'Sport',       price:2100000,  old:null,      emoji:'🚴', badge:'Yangi',    rating:4.5 },
+  { id:7,  name:'Airpods Pro',         cat:'Elektronika', price:1890000,  old:2100000,  emoji:'🎧', badge:'Chegirma', rating:4.8 },
+  { id:8,  name:'Aromatik Sham',       cat:'Uy',          price:89000,    old:null,      emoji:'🕯️', badge:'Yangi',   rating:4.7 },
+  // Oziq-ovqat
+  { id:9,  name:'Qizil Olma (1 kg)',   cat:'Oziq-ovqat',  price:12000,    old:16000,    emoji:'🍎', badge:'Chegirma', rating:4.9 },
+  { id:10, name:'Banan (1 kg)',         cat:'Oziq-ovqat',  price:14000,    old:null,      emoji:'🍌', badge:'Yangi',    rating:4.8 },
+  { id:11, name:'Tarvuz (1 kg)',        cat:'Oziq-ovqat',  price:4000,     old:6000,     emoji:'🍉', badge:'Chegirma', rating:4.9 },
+  { id:12, name:'Limon (1 kg)',         cat:'Oziq-ovqat',  price:18000,    old:null,      emoji:'🍋', badge:'Yangi',    rating:4.7 },
+  { id:13, name:'Uzum (1 kg)',          cat:'Oziq-ovqat',  price:22000,    old:28000,    emoji:'🍇', badge:'Chegirma', rating:4.8 },
+  { id:14, name:'Mandarin (1 kg)',      cat:'Oziq-ovqat',  price:20000,    old:null,      emoji:'🍊', badge:'Yangi',    rating:4.6 },
+  { id:15, name:'Qulupnay (500 g)',     cat:'Oziq-ovqat',  price:35000,    old:45000,    emoji:'🍓', badge:'Chegirma', rating:5.0 },
+  { id:16, name:'Gilos (1 kg)',         cat:'Oziq-ovqat',  price:48000,    old:null,      emoji:'🍒', badge:'Yangi',    rating:4.9 },
+  { id:17, name:'Pomidor (1 kg)',       cat:'Oziq-ovqat',  price:9000,     old:12000,    emoji:'🍅', badge:'Chegirma', rating:4.7 },
+  { id:18, name:'Bodring (1 kg)',       cat:'Oziq-ovqat',  price:8000,     old:null,      emoji:'🥒', badge:'Yangi',    rating:4.6 },
+  { id:19, name:'Karam (1 dona)',       cat:'Oziq-ovqat',  price:7000,     old:10000,    emoji:'🥬', badge:'Chegirma', rating:4.5 },
+  { id:20, name:'Sabzi (1 kg)',         cat:'Oziq-ovqat',  price:6000,     old:null,      emoji:'🥕', badge:'Yangi',    rating:4.8 },
+  { id:21, name:'Piyoz (1 kg)',         cat:'Oziq-ovqat',  price:5000,     old:7000,     emoji:'🧅', badge:'Chegirma', rating:4.6 },
+  { id:22, name:"Sarimsoq (1 to'p)",   cat:'Oziq-ovqat',  price:8000,     old:null,      emoji:'🧄', badge:'Yangi',    rating:4.7 },
+  // Kosmetika
+  { id:23, name:'Labial Pomada',        cat:'Kosmetika',   price:85000,    old:110000,   emoji:'💄', badge:'Chegirma', rating:4.9 },
+  { id:24, name:'Yuz Kremi SPF50',      cat:'Kosmetika',   price:145000,   old:null,      emoji:'🧴', badge:'Yangi',    rating:4.8 },
+  { id:25, name:'Parfyum (50ml)',        cat:'Kosmetika',   price:320000,   old:420000,   emoji:'🌸', badge:'Chegirma', rating:5.0 },
+  { id:26, name:'Ko\'z Soyasi Seti',    cat:'Kosmetika',   price:195000,   old:null,      emoji:'👁️', badge:'Yangi',   rating:4.7 },
+  { id:27, name:'Soch Maskasi',         cat:'Kosmetika',   price:78000,    old:95000,    emoji:'💆', badge:'Chegirma', rating:4.6 },
+  { id:28, name:'Tonal Krem',           cat:'Kosmetika',   price:112000,   old:null,      emoji:'🫧', badge:'Yangi',    rating:4.8 },
+  // Bijuteriya
+  { id:29, name:'Oltin Uzuk',           cat:'Bijuteriya',  price:580000,   old:700000,   emoji:'💍', badge:'Chegirma', rating:5.0 },
+  { id:30, name:'Kumush Marjon',        cat:'Bijuteriya',  price:230000,   old:null,      emoji:'📿', badge:'Yangi',    rating:4.8 },
+  { id:31, name:'Brilliantli Sirg\'a',  cat:'Bijuteriya',  price:890000,   old:1100000,  emoji:'💎', badge:'Chegirma', rating:4.9 },
+  { id:32, name:'Bilakuzuk Seti',       cat:'Bijuteriya',  price:165000,   old:null,      emoji:'✨', badge:'Yangi',    rating:4.7 },
+  { id:33, name:'Oltin Zanjir',         cat:'Bijuteriya',  price:450000,   old:560000,   emoji:'🔗', badge:'Chegirma', rating:4.8 },
+  // Shirinliklar
+  { id:34, name:'Shokolad Tort',        cat:'Shirinliklar', price:120000,  old:150000,   emoji:'🎂', badge:'Chegirma', rating:5.0 },
+  { id:35, name:'Makaron (12 dona)',    cat:'Shirinliklar', price:95000,   old:null,      emoji:'🍬', badge:'Yangi',    rating:4.9 },
+  { id:36, name:'Belgiyan Shokolad',    cat:'Shirinliklar', price:85000,   old:100000,   emoji:'🍫', badge:'Chegirma', rating:4.8 },
+  { id:37, name:'Zefir Seti',           cat:'Shirinliklar', price:45000,   old:null,      emoji:'🍭', badge:'Yangi',    rating:4.7 },
+  { id:38, name:'Napoleon Tort',        cat:'Shirinliklar', price:135000,  old:160000,   emoji:'🍰', badge:'Chegirma', rating:4.9 },
+  { id:39, name:'Asallik Pechene',      cat:'Shirinliklar', price:38000,   old:null,      emoji:'🍪', badge:'Yangi',    rating:4.6 },
+  // Xo'jalik mollari
+  { id:40, name:'Supurgi Seti',          cat:'Xojalik',     price:45000,   old:60000,    emoji:'🧹', badge:'Chegirma', rating:4.7 },
+  { id:41, name:'Kir Yuvish Kukuni',     cat:'Xojalik',     price:32000,   old:null,      emoji:'🫧', badge:'Yangi',    rating:4.6 },
+  { id:42, name:'Idish Yuvish Vositasi', cat:'Xojalik',     price:18000,   old:24000,    emoji:'🍽️', badge:'Chegirma', rating:4.5 },
+  { id:43, name:'Pol Lati Seti',         cat:'Xojalik',     price:55000,   old:null,      emoji:'🪣', badge:'Yangi',    rating:4.6 },
+  { id:44, name:'Havo Tozalagich',       cat:'Xojalik',     price:280000,  old:350000,   emoji:'💨', badge:'Chegirma', rating:4.8 },
+  { id:45, name:'Zararkunanda Vositasi', cat:'Xojalik',     price:22000,   old:null,      emoji:'🪲', badge:'Yangi',    rating:4.4 },
+  // Ro'mollar
+  { id:46, name:'Ipak Ro\'mol',          cat:'Romol',       price:120000,  old:160000,   emoji:'🧣', badge:'Chegirma', rating:4.9 },
+  { id:47, name:'Junli Ro\'mol',         cat:'Romol',       price:85000,   old:null,      emoji:'🌀', badge:'Yangi',    rating:4.7 },
+  { id:48, name:'Chiroyli Hijob',        cat:'Romol',       price:65000,   old:80000,    emoji:'🎀', badge:'Chegirma', rating:4.8 },
+  { id:49, name:'Bolalar Ro\'moli',      cat:'Romol',       price:35000,   old:null,      emoji:'🌸', badge:'Yangi',    rating:4.6 },
+  { id:50, name:'Premium Shal',          cat:'Romol',       price:195000,  old:240000,   emoji:'✨', badge:'Chegirma', rating:5.0 },
+  // Ichki kiyimlar
+  { id:51, name:'Ayollar To\'plami',     cat:'IchkiKiyim',  price:145000,  old:180000,   emoji:'👙', badge:'Chegirma', rating:4.8 },
+  { id:52, name:'Erkaklar Futbolkasi',   cat:'IchkiKiyim',  price:55000,   old:null,      emoji:'👕', badge:'Yangi',    rating:4.6 },
+  { id:53, name:'Termal Ichki Kiyim',    cat:'IchkiKiyim',  price:210000,  old:260000,   emoji:'🧥', badge:'Chegirma', rating:4.7 },
+  { id:54, name:'Bolalar Pijamalari',    cat:'IchkiKiyim',  price:95000,   old:null,      emoji:'🌙', badge:'Yangi',    rating:4.9 },
+  { id:55, name:'Sport Ichki Kiyim',     cat:'IchkiKiyim',  price:130000,  old:160000,   emoji:'💪', badge:'Chegirma', rating:4.7 },
+  // Tabiiy dorilar
+  { id:56, name:'Asal (500g)',           cat:'Dori',        price:85000,   old:100000,   emoji:'🍯', badge:'Chegirma', rating:5.0 },
+  { id:57, name:'Zanjabil Choy',         cat:'Dori',        price:45000,   old:null,      emoji:'🫖', badge:'Yangi',    rating:4.8 },
+  { id:58, name:'Propolis Damlamasi',    cat:'Dori',        price:95000,   old:120000,   emoji:'🌿', badge:'Chegirma', rating:4.9 },
+  { id:59, name:'Mumiyo (tabletka)',     cat:'Dori',        price:75000,   old:null,      emoji:'💊', badge:'Yangi',    rating:4.7 },
+  { id:60, name:'Itburun Sharbati',      cat:'Dori',        price:38000,   old:50000,    emoji:'🌹', badge:'Chegirma', rating:4.8 },
+  { id:61, name:'Lavanda Moyi',          cat:'Dori',          price:65000,   old:null,      emoji:'💜', badge:'Yangi',    rating:4.6 },
+  // Bolalar kiyimi
+  { id:62, name:"Chaqaloq Kombinezoni", cat:'BolalarKiyim',  price:75000,   old:95000,    emoji:'👶', badge:'Chegirma', rating:4.9 },
+  { id:63, name:"Qizlar Ko'ylagi",      cat:'BolalarKiyim',  price:85000,   old:null,      emoji:'👗', badge:'Yangi',    rating:4.8 },
+  { id:64, name:"O'g'il Bolalar Seti",  cat:'BolalarKiyim',  price:110000,  old:140000,   emoji:'👦', badge:'Chegirma', rating:4.7 },
+  { id:65, name:'Bolalar Shlyapasi',    cat:'BolalarKiyim',  price:45000,   old:null,      emoji:'🎩', badge:'Yangi',    rating:4.6 },
+  { id:66, name:'Bolalar Krossovkasi',  cat:'BolalarKiyim',  price:135000,  old:170000,   emoji:'👟', badge:'Chegirma', rating:4.9 },
+  { id:67, name:'Maktab Formasi',       cat:'BolalarKiyim',  price:180000,  old:null,      emoji:'🎒', badge:'Yangi',    rating:4.8 },
+  { id:68, name:"Qish Kurtka (bola)",   cat:'BolalarKiyim',  price:290000,  old:360000,   emoji:'🧥', badge:'Chegirma', rating:4.9 },
+  { id:69, name:'Bolalar Pijamasi',     cat:'BolalarKiyim',  price:65000,   old:null,      emoji:'🌙', badge:'Yangi',    rating:4.7 },
+  { id:70, name:'Bolalar Shimi',        cat:'BolalarKiyim',  price:70000,   old:90000,    emoji:'👖', badge:'Chegirma', rating:4.6 },
+  // So'mkalar
+  { id:71, name:"Charm Ayol So'mkasi",  cat:'Sumka',         price:450000,  old:580000,   emoji:'👜', badge:'Chegirma', rating:4.9 },
+  { id:72, name:"Kichik Krossbodi",     cat:'Sumka',         price:220000,  old:null,      emoji:'👝', badge:'Yangi',    rating:4.8 },
+  { id:73, name:"Ofis So'mkasi",        cat:'Sumka',         price:380000,  old:460000,   emoji:'💼', badge:'Chegirma', rating:4.7 },
+  { id:74, name:"Yelka So'mkasi",       cat:'Sumka',         price:190000,  old:null,      emoji:'🎽', badge:'Yangi',    rating:4.6 },
+  { id:75, name:"Klach So'mka",         cat:'Sumka',         price:160000,  old:200000,   emoji:'👛', badge:'Chegirma', rating:4.8 },
+  // Rikzaklar
+  { id:76, name:'Sport Rikzak',         cat:'Rikzak',        price:280000,  old:350000,   emoji:'🎒', badge:'Chegirma', rating:4.9 },
+  { id:77, name:'Maktab Rikzaki',       cat:'Rikzak',        price:195000,  old:null,      emoji:'📚', badge:'Yangi',    rating:4.8 },
+  { id:78, name:'Sayohat Rikzaki',      cat:'Rikzak',        price:420000,  old:520000,   emoji:'🏔️', badge:'Chegirma', rating:4.7 },
+  { id:79, name:"Noutbuk Rikzaki",      cat:'Rikzak',        price:350000,  old:null,      emoji:'💻', badge:'Yangi',    rating:4.8 },
+  { id:80, name:'Mini Rikzak',          cat:'Rikzak',        price:145000,  old:180000,   emoji:'🎀', badge:'Chegirma', rating:4.6 },
+  // Chexollar
+  { id:81, name:'iPhone 15 Chexoli',    cat:'Chexol',        price:45000,   old:60000,    emoji:'📱', badge:'Chegirma', rating:4.8 },
+  { id:82, name:'Samsung Chexoli',      cat:'Chexol',        price:38000,   old:null,      emoji:'📲', badge:'Yangi',    rating:4.7 },
+  { id:83, name:'Noutbuk Chexoli',      cat:'Chexol',        price:85000,   old:105000,   emoji:'💻', badge:'Chegirma', rating:4.8 },
+  { id:84, name:'Planshet Chexoli',     cat:'Chexol',        price:65000,   old:null,      emoji:'📟', badge:'Yangi',    rating:4.6 },
+  { id:85, name:'Quloqchin Chexoli',    cat:'Chexol',        price:28000,   old:35000,    emoji:'🎧', badge:'Chegirma', rating:4.5 },
+  { id:86, name:'Soat Chexoli',         cat:'Chexol',        price:32000,   old:null,      emoji:'⌚', badge:'Yangi',    rating:4.6 },
+  // Sovg'alar
+  { id:87, name:"Tug'ilgan Kun Seti",   cat:'Sovga',         price:250000,  old:320000,   emoji:'🎁', badge:'Chegirma', rating:5.0 },
+  { id:88, name:'Sevgilisi Uchun Set',  cat:'Sovga',         price:380000,  old:null,      emoji:'❤️', badge:'Yangi',   rating:4.9 },
+  { id:89, name:"Ona Kuni Sovg'asi",    cat:'Sovga',         price:290000,  old:370000,   emoji:'🌷', badge:'Chegirma', rating:4.9 },
+  { id:90, name:"Bolalar Sovg'asi",     cat:'Sovga',         price:150000,  old:null,      emoji:'🧸', badge:'Yangi',    rating:4.8 },
+  { id:91, name:"Biznes Sovg'a Seti",   cat:'Sovga',         price:520000,  old:650000,   emoji:'🏆', badge:'Chegirma', rating:4.8 },
+  { id:92, name:"Yangi Yil Sovg'asi",   cat:'Sovga',         price:180000,  old:null,      emoji:'🎄', badge:'Yangi',    rating:4.7 },
+  // Oyoq kiyimlari
+  { id:93,  name:"Erkaklar Krossovkasi", cat:'OyoqKiyim',    price:380000,  old:480000,   emoji:'👟', badge:'Chegirma', rating:4.9 },
+  { id:94,  name:"Ayollar Poshnali",     cat:'OyoqKiyim',    price:290000,  old:null,      emoji:'👠', badge:'Yangi',    rating:4.8 },
+  { id:95,  name:"Charm Tuflisi",        cat:'OyoqKiyim',    price:420000,  old:520000,   emoji:'👞', badge:'Chegirma', rating:4.7 },
+  { id:96,  name:"Sandal (Yozgi)",       cat:'OyoqKiyim',    price:145000,  old:null,      emoji:'👡', badge:'Yangi',    rating:4.6 },
+  { id:97,  name:"Qishki Etik",          cat:'OyoqKiyim',    price:560000,  old:700000,   emoji:'👢', badge:'Chegirma', rating:4.9 },
+  { id:98,  name:"Sport Poyabzal",       cat:'OyoqKiyim',    price:320000,  old:null,      emoji:'🥿', badge:'Yangi',    rating:4.7 },
+  { id:99,  name:"Bolalar Poyabzali",    cat:'OyoqKiyim',    price:185000,  old:230000,   emoji:'👶', badge:'Chegirma', rating:4.8 },
+  { id:100, name:"Sliper (Uy uchun)",    cat:'OyoqKiyim',    price:75000,   old:null,      emoji:'🩴', badge:'Yangi',    rating:4.6 },
+  { id:101, name:"Klassik Tuflisi",      cat:'OyoqKiyim',    price:495000,  old:600000,   emoji:'👞', badge:'Chegirma', rating:4.8 },
+  { id:102, name:"Sneaker (Trendi)",     cat:'OyoqKiyim',    price:650000,  old:null,      emoji:'👟', badge:'Yangi',    rating:5.0 },
+  // Bolalar o'yinchoqlari
+  { id:103, name:"Yumshoq Ayiq",         cat:'Oyinchoq',     price:85000,   old:110000,   emoji:'🧸', badge:'Chegirma', rating:5.0 },
+  { id:104, name:"Lego Seti (200 dona)", cat:'Oyinchoq',     price:195000,  old:null,      emoji:'🧱', badge:'Yangi',    rating:4.9 },
+  { id:105, name:"Mashina To'plami",     cat:'Oyinchoq',     price:120000,  old:150000,   emoji:'🚗', badge:'Chegirma', rating:4.8 },
+  { id:106, name:"Qo'g'irchoq Seti",     cat:'Oyinchoq',     price:145000,  old:null,      emoji:'🪆', badge:'Yangi',    rating:4.7 },
+  { id:107, name:"Interaktiv Robot",     cat:'Oyinchoq',     price:380000,  old:460000,   emoji:'🤖', badge:'Chegirma', rating:4.9 },
+  { id:108, name:"Rangli Plastilin",     cat:'Oyinchoq',     price:35000,   old:null,      emoji:'🎨', badge:'Yangi',    rating:4.6 },
+  { id:109, name:"Velosiped (3-6 yosh)", cat:'Oyinchoq',     price:650000,  old:800000,   emoji:'🚲', badge:'Chegirma', rating:4.9 },
+  { id:110, name:"Qum O'yin Seti",       cat:'Oyinchoq',     price:75000,   old:null,      emoji:'🏖️', badge:'Yangi',   rating:4.7 },
+  // Intimniy mahsulotlar (18+)
+  { id:111, name:"Massaj Moyi",          cat:'Intim',        price:95000,   old:120000,   emoji:'💆', badge:'Chegirma', rating:4.8 },
+  { id:112, name:"Aromali Sham Seti",    cat:'Intim',        price:125000,  old:null,      emoji:'🕯️', badge:'Yangi',   rating:4.9 },
+  { id:113, name:"Juftlik Pijamasi",     cat:'Intim',        price:210000,  old:260000,   emoji:'🌙', badge:'Chegirma', rating:4.7 },
+  { id:114, name:"Sevgi Seti (Premium)", cat:'Intim',        price:350000,  old:null,      emoji:'❤️', badge:'Yangi',   rating:4.9 },
+  { id:115, name:"Atir Suv (Romantik)", cat:'Intim',         price:280000,  old:340000,   emoji:'🌹', badge:'Chegirma', rating:4.8 },
+  { id:116, name:"Bolishcha Seti",       cat:'Intim',        price:165000,  old:null,      emoji:'🛏️', badge:'Yangi',   rating:4.6 },
+];
+
+let cart = [];
+
+function formatPrice(p) {
+  return p.toLocaleString('uz-UZ') + ' so\'m';
+}
+
+function getCatClass(cat) {
+  const map = {
+    'Oziq-ovqat': 'food', 'Kosmetika': 'kosmetika', 'Bijuteriya': 'bijuteriya',
+    'Shirinliklar': 'shirinlik', 'Xojalik': 'xojalik', 'Romol': 'romol',
+    'IchkiKiyim': 'ichki', 'Dori': 'dori', 'BolalarKiyim': 'bola',
+    'Sumka': 'sumka', 'Rikzak': 'rikzak', 'Chexol': 'chexol', 'Sovga': 'sovga',
+    'OyoqKiyim': 'oyoq', 'Oyinchoq': 'oyinchoq', 'Intim': 'intim'
+  };
+  return map[cat] || '';
+}
+
+function renderProducts(list) {
+  const grid = document.getElementById('productsGrid');
+  grid.innerHTML = list.map(p => `
+    <div class="product-card ${getCatClass(p.cat)}" data-id="${p.id}">
+      <div class="product-img">
+        ${p.emoji}
+        <span class="product-badge ${p.badge === 'Yangi' ? 'new' : ''}">${p.badge}</span>
+        <div class="product-actions">
+          <button class="prod-action-btn" onclick="addToCart(${p.id})">Savatga</button>
+          <button class="prod-action-btn" onclick="showNotification('${p.name} sevimlilarga qo\'shildi ♥')">♥</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <div class="product-name">${p.name}</div>
+        <div class="product-sub">${p.cat}</div>
+        <div class="product-footer">
+          <div>
+            <span class="product-price">${formatPrice(p.price)}</span>
+            ${p.old ? `<span class="product-old-price">${formatPrice(p.old)}</span>` : ''}
+          </div>
+          <div class="stars">${'★'.repeat(Math.floor(p.rating))}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function setFilter(cat, btn) {
+  document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const filtered = cat === 'Barchasi' ? products : products.filter(p => p.cat === cat);
+  renderProducts(filtered);
+}
+
+function filterByCategory(cat) {
+  const filtered = products.filter(p => p.cat === cat);
+  renderProducts(filtered);
+  // update tab highlight
+  document.querySelectorAll('.filter-tab').forEach(b => {
+    b.classList.remove('active');
+    if (b.textContent.includes(cat) || (cat === 'Oziq-ovqat' && b.classList.contains('food-tab'))) {
+      b.classList.add('active');
+    }
+  });
+  document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+}
+
+function filterProducts(q) {
+  const filtered = products.filter(p =>
+    p.name.toLowerCase().includes(q.toLowerCase()) ||
+    p.cat.toLowerCase().includes(q.toLowerCase())
+  );
+  renderProducts(filtered);
+}
+
+function addToCart(id) {
+  const p = products.find(x => x.id === id);
+  const existing = cart.find(x => x.id === id);
+  if (existing) existing.qty++;
+  else cart.push({ ...p, qty: 1 });
+  updateCart();
+  showNotification(p.name + ' savatga qo\'shildi ✓');
+}
+
+function updateCart() {
+  const badge = document.getElementById('cartBadge');
+  const total = cart.reduce((s, x) => s + x.qty, 0);
+  badge.textContent = total;
+
+  const cartItems = document.getElementById('cartItems');
+  const cartFooter = document.getElementById('cartFooter');
+
+  if (cart.length === 0) {
+    cartItems.innerHTML = `<div class="empty-cart"><div class="empty-cart-icon">🛒</div><p>Savat bo'sh</p></div>`;
+    cartFooter.innerHTML = '';
+    return;
+  }
+
+  cartItems.innerHTML = cart.map(item => `
+    <div class="cart-item">
+      <div class="cart-item-img">${item.emoji}</div>
+      <div class="cart-item-info">
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-price">${formatPrice(item.price * item.qty)}</div>
+        <div class="cart-item-qty">
+          <button class="qty-btn" onclick="changeQty(${item.id}, -1)">−</button>
+          <span>${item.qty}</span>
+          <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  const grandTotal = cart.reduce((s, x) => s + x.price * x.qty, 0);
+  cartFooter.innerHTML = `
+    <div class="cart-total">
+      <span>Jami:</span>
+      <span>${formatPrice(grandTotal)}</span>
+    </div>
+    <button class="btn-primary" style="width:100%; justify-content:center;" onclick="checkout()">Buyurtma berish →</button>
+  `;
+}
+
+function changeQty(id, delta) {
+  const item = cart.find(x => x.id === id);
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty <= 0) cart = cart.filter(x => x.id !== id);
+  updateCart();
+}
+
+function toggleCart() {
+  document.getElementById('cartDrawer').classList.toggle('open');
+  document.getElementById('cartOverlay').classList.toggle('open');
+}
+
+function toggleSearch() {
+  const bar = document.getElementById('searchBar');
+  bar.classList.toggle('show');
+  if (bar.classList.contains('show')) document.getElementById('searchInput').focus();
+}
+
+function showNotification(msg) {
+  const n = document.getElementById('notification');
+  document.getElementById('notifText').textContent = msg;
+  n.classList.add('show');
+  setTimeout(() => n.classList.remove('show'), 3000);
+}
+
+function checkout() {
+  cart = [];
+  updateCart();
+  toggleCart();
+  showNotification('Buyurtmangiz qabul qilindi! ✓');
+}
+
+function showAgeWarning() {
+  document.getElementById('ageModal').classList.add('open');
+}
+function closeAgeModal() {
+  document.getElementById('ageModal').classList.remove('open');
+}
+function confirmAge() {
+  closeAgeModal();
+  const btn = document.querySelector('.intim-tab');
+  setFilter('Intim', btn);
+}
+
+function filterByViloyat(nom) {
+  document.querySelectorAll('.vtag').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  showNotification('📍 ' + nom + ' tanlandi ✓');
+}
+
+// Viloyatlar
+const viloyatlar = [
+  { nom: 'Toshkent',     emoji: '🏙️', kun: '1 kun',   narx: 'Bepul' },
+  { nom: 'Samarqand',   emoji: '🕌', kun: '2 kun',   narx: '15 000 so\'m' },
+  { nom: 'Buxoro',      emoji: '🏛️', kun: '2 kun',   narx: '15 000 so\'m' },
+  { nom: 'Namangan',    emoji: '🌿', kun: '2 kun',   narx: '12 000 so\'m' },
+  { nom: 'Andijon',     emoji: '🏭', kun: '2 kun',   narx: '12 000 so\'m' },
+  { nom: 'Farg\'ona',   emoji: '🌾', kun: '2 kun',   narx: '12 000 so\'m' },
+  { nom: 'Qashqadaryo', emoji: '🏔️', kun: '3 kun',   narx: '20 000 so\'m' },
+  { nom: 'Surxondaryo', emoji: '🌄', kun: '3 kun',   narx: '20 000 so\'m' },
+  { nom: 'Navoiy',      emoji: '⛏️', kun: '2 kun',   narx: '18 000 so\'m' },
+  { nom: 'Xorazm',      emoji: '🏯', kun: '3 kun',   narx: '22 000 so\'m' },
+  { nom: 'Jizzax',      emoji: '🌻', kun: '2 kun',   narx: '15 000 so\'m' },
+  { nom: 'Sirdaryo',    emoji: '🌊', kun: '1-2 kun', narx: '10 000 so\'m' },
+  { nom: 'Qoraqalpog\'iston', emoji: '🦅', kun: '3-4 kun', narx: '25 000 so\'m' },
+];
+
+let selectedViloyat = null;
+
+function renderViloyatlar() {
+  const list = document.getElementById('viloyatList');
+  list.innerHTML = viloyatlar.map(v => `
+    <div class="viloyat-item ${selectedViloyat === v.nom ? 'selected' : ''}" onclick="selectViloyat('${v.nom}')">
+      <span class="viloyat-emoji">${v.emoji}</span>
+      <span>${v.nom}</span>
+    </div>
+  `).join('');
+}
+
+function toggleViloyat() {
+  const sel = document.getElementById('viloyatSelector');
+  const drop = document.getElementById('viloyatDropdown');
+  sel.classList.toggle('open');
+  drop.classList.toggle('open');
+  renderViloyatlar();
+}
+
+function selectViloyat(nom) {
+  selectedViloyat = nom;
+  const v = viloyatlar.find(x => x.nom === nom);
+  document.getElementById('viloyatName').textContent = v.emoji + ' ' + v.nom;
+  document.getElementById('viloyatSelector').classList.add('active');
+  document.getElementById('viloyatDropdown').classList.remove('open');
+  document.getElementById('viloyatSelector').classList.remove('open');
+
+  const bar = document.getElementById('deliveryBar');
+  const narxText = v.narx === 'Bepul' ? '🎉 Bepul yetkazib berish' : v.narx;
+  document.getElementById('deliveryText').innerHTML =
+    `<strong>${v.nom}</strong> viloyatiga yetkazib berish: <strong>${v.kun}</strong> ichida — <strong style="color:var(--accent)">${narxText}</strong>`;
+  bar.classList.add('show');
+  document.body.classList.add('has-delivery-bar');
+
+  renderViloyatlar();
+  showNotification(v.emoji + ' ' + v.nom + ' tanlandi ✓');
+}
+
+document.addEventListener('click', function(e) {
+  const sel = document.getElementById('viloyatSelector');
+  const drop = document.getElementById('viloyatDropdown');
+  if (!sel.contains(e.target) && !drop.contains(e.target)) {
+    sel.classList.remove('open');
+    drop.classList.remove('open');
+  }
+});
+
+// Init
+renderProducts(products);
+updateCart();
+</script>
+</body>
+</html>
